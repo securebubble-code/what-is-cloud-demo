@@ -1,6 +1,6 @@
 # Create Route 53 record
 data "aws_route53_zone" "main_zone" {
-  name = "${var.website_domain}."
+  name = "${var.top_level_domain}."
 }
 
 resource "aws_route53_record" "site-alias" {

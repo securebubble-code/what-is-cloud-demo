@@ -29,6 +29,11 @@ variable "website_domain" {
   default     = "brightoncloud-demo.securebubble.xyz"
 }
 
+variable "top_level_domain" {
+  description = "The top level domain name which represents the Route 53 Hosted Zone"
+  default     = "securebubble.xyz"
+}
+
 variable "tags" {
   type    = map(string)
   default = {}

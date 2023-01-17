@@ -1,5 +1,5 @@
 data "aws_iam_role" "terraform_role" {
-  name = "main-terraform-Role"
+  name = "github-terrraform-build-role"
 }
 resource "aws_s3_bucket" "main-website" {
   bucket        = local.bucket_name
