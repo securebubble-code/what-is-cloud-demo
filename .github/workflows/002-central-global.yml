@@ -7,10 +7,10 @@ on:
     types:
       - completed
   workflow_dispatch:
-  # push:
-  #   paths:
-  #     - '02global/**'
-  #     - '!02global/readme.md'
+  push:
+    paths:
+      - '02global/**'
+      - '!02global/readme.md'
   
 env:
   WORKSPACE: "global"

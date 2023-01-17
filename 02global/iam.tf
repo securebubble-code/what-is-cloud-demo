@@ -85,3 +85,35 @@ resource "aws_iam_group_policy_attachment" "pol-att-grp-s3-automation-access" {
   group      = aws_iam_group.grp-s3-automation-access.name
   policy_arn = aws_iam_policy.pol-s3-automation-access.arn
 }
+
+resource "aws_iam_user" "main-website-table" {
+  name = "main-website-table"
+  tags = {
+    tag-key = "tag-value"
+  }
+}
+
+resource "aws_iam_access_key" "main-website-table-user" {
+  user = aws_iam_user.main-website-table.name
+}
+
+resource "aws_iam_user_policy" "main-website-table-policy" {
+  name = "main-website-table-policy"
+  user = aws_iam_user.main-website-table.name
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "dynamodb:List*",
+        "dynamodb:GetItem",
+      ],
+      "Effect": "Allow",
+      "Resource": "${aws_dynamodb_table.main-website-table.arn}"
+    }
+  ]
+}
+EOF
+}

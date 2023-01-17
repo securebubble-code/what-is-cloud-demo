@@ -10,6 +10,8 @@ on:
 env:
   ENVIRONMENT: "dev"
   REGION: "eu-west-1"
+  AWS_KEY: ${{ secrets.AWS_KEY }}
+  AWS_SECRET: ${{ secrets.AWS_SECRET }}
 
 jobs:
   update-website:
@@ -29,4 +31,7 @@ jobs:
         role-session-name: "terraform-${{ env.ENVIRONMENT }}-apply"
 
     - name: Deploy website to S3 bucket
-      run: aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://${{ env.ENVIRONMENT }}.brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
+      run: |
+        sed -i 's/(ACCESS_KEY_ID)/$AWS_KEY/g' ./website/site/${{ env.ENVIRONMENT }}/index.html
+        sed -i 's/(SECRET_ACCESS_KEY)/$AWS_SECRET/g' ./website/site/${{ env.ENVIRONMENT }}/index.html
+        aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://${{ env.ENVIRONMENT }}.brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
