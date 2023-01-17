@@ -1,0 +1,96 @@
+name: 001 Base Deployment
+
+on:
+  workflow_dispatch:
+
+env:
+  WORKSPACE: "base"
+  FOLDERNAME: "01base"
+  PROJECT: "brighton-cloud-demos"
+  REGION: "eu-west-1"
+  TERRAFORM_VERSION: "1.3.7"
+  GITHUB_ACCOUNT: "securebubble-code"
+
+jobs:
+  base_deployment:
+    name: base_deployment
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write         # This is required for requesting the JWT
+      contents: write    # This is required for actions/checkout
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Base Deployment - Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        aws-region: ${{ env.REGION }}
+        role-to-assume: ${{ secrets.ROLE_NAME }}
+        role-session-name: "terraform-${{ env.WORKSPACE }}-apply"
+
+    - name: Base Deployment - Install Terraform        
+      run: |
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+
+    - name: Base Deployment - Verify Terraform version
+      run: terraform --version
+
+    - name: Base Deployment - Terraform format
+      run: terraform -chdir=$FOLDERNAME fmt
+
+    - name: Base Deployment - Terraform init
+      run: terraform -chdir=$FOLDERNAME init -input=false
+
+    - name: Base Deployment - specify region and project name
+      run: |
+        find . -iname "main.tf" -exec sed -i 's/%region%/'$REGION'/g' '{}' \;
+        find . -iname "variables.tf" -exec sed -i 's/%region%/'$REGION'/g' '{}' \;
+        find . -iname "main.tf" -exec sed -i 's/%project%/'$PROJECT'/g' '{}' \;
+        find . -iname "variables.tf" -exec sed -i 's/%project%/'$PROJECT'/g' '{}' \;
+
+    - name: Base Deployment - Commit region and project settings
+      run: |
+        if [[ `git status --porcelain -uno` ]]; then
+          git config --local user.name $GITHUB_ACCOUNT
+          find . -iname "main.tf" -exec git add '{}' \;
+          find . -iname "variables.tf" -exec git add '{}' \;
+          git commit -m "Updating the main.tf and variables.tf with region and project settings"
+          git push
+        fi
+
+    - name: Base Deployment - Terraform workspace
+      run: terraform -chdir=$FOLDERNAME workspace select $WORKSPACE || terraform -chdir=$FOLDERNAME workspace new $WORKSPACE
+
+    - name: Base Deployment - Terraform validate
+      run: terraform -chdir=$FOLDERNAME validate
+
+    - name: Base Deployment - Terraform plan
+      run: terraform -chdir=$FOLDERNAME plan -input=false
+
+    - name: Base Deployment - Terraform apply
+      run: terraform -chdir=$FOLDERNAME apply -auto-approve -input=false
+
+    - name: Base Deployment - Update code to move backend
+      run: |
+        ACCOUNTID="$(terraform -chdir=$FOLDERNAME output account_id)"
+        ACCOUNTID=$(sed -e 's/^"//' -e 's/"$//' <<<"$ACCOUNTID")
+        sed -i 's/\#;//g' $FOLDERNAME/main.tf
+        find . -iname "main.tf" -exec sed -i 's/%accountID%/'$ACCOUNTID'/g' '{}' \;
+        sleep 60
+
+    - name: Base Deployment - Commit migration to backend
+      run: |
+        if [[ `git status --porcelain -uno` ]]; then
+          git config --local user.name $GITHUB_ACCOUNT
+          find . -iname "main.tf" -exec git add '{}' \;
+          git commit -m "Updating the main.tf after migrating backend state"
+          git push
+        fi
+
+    - name: Base Deployment - Terraform migrate backend
+      run: terraform -chdir=$FOLDERNAME init -migrate-state -force-copy
+
+

@@ -1,0 +1,60 @@
+name: 100 Central Website Deployment - Dev
+
+on:
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - 'website/terraform/**'
+  #     - '!website/terraform/readme.md'
+  
+env:
+  ENVIRONMENT: "dev"
+  FOLDERNAME: "website"
+  REGION: "eu-west-1"
+  TERRAFORM_VERSION: "1.3.7"
+
+jobs:
+  dev-website-deploy:
+    name: dev-website-deploy
+    runs-on: ubuntu-latest
+    #environment: dev
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        aws-region: ${{ env.REGION }}
+        role-to-assume: ${{ secrets.ROLE_NAME }}
+        role-session-name: "terraform-${{ env.ENVIRONMENT }}-${{ env.FOLDERNAME }}-apply"
+
+    - name: dev-website Deployment - Install Terraform
+      run: |
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+
+    - name: dev-website Deployment - Verify Terraform version
+      run: terraform --version
+
+    - name: dev-website Deployment - Terraform format
+      run: terraform -chdir=$FOLDERNAME/terraform fmt
+
+    - name: dev-website Deployment - Terraform init
+      run: terraform -chdir=$FOLDERNAME/terraform init -input=false
+
+    - name: dev-website Deployment - Terraform workspace
+      run: terraform -chdir=$FOLDERNAME/terraform workspace select $ENVIRONMENT-$FOLDERNAME || terraform -chdir=$FOLDERNAME/terraform workspace new $ENVIRONMENT-$FOLDERNAME 
+
+    - name: dev-website Deployment - Terraform validation
+      run: terraform -chdir=$FOLDERNAME/terraform validate
+
+    - name: dev-website Deployment - Terraform plan
+      run: terraform -chdir=$FOLDERNAME/terraform plan -var 'environment=${{ env.ENVIRONMENT }}' -input=false
+
+    - name: dev-website Deployment - Terraform apply
+      run: terraform -chdir=$FOLDERNAME/terraform apply -var 'environment=${{ env.ENVIRONMENT }}' -auto-approve -input=false

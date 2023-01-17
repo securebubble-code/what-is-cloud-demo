@@ -1,0 +1,32 @@
+name: 201 Deploy Central Website HTML - Prod
+
+on: 
+  workflow_dispatch:
+  # push:
+  #   paths:
+  #     - 'website/site/prod**'
+  #     - '!website/site/prod/readme.md'
+
+env:
+  ENVIRONMENT: "prod"
+  REGION: "eu-west-1"
+
+jobs:
+  update-website:
+    runs-on: ubuntu-latest
+    #environment: prod
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        aws-region: ${{ env.REGION }}
+        role-to-assume: ${{ secrets.ROLE_NAME }}
+        role-session-name: "terraform-${{ env.ENVIRONMENT }}-apply"
+
+    - name: Deploy website to S3 bucket
+      run: aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://demo.brightoncloud.co.uk --exclude ".git*" --acl public-read --sse AES256 --delete
