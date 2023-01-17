@@ -32,6 +32,6 @@ jobs:
 
     - name: Deploy website to S3 bucket
       run: |
-        sed -i 's/(ACCESS_KEY_ID)/$AWS_KEY/g' ./website/site/${{ env.ENVIRONMENT }}/index.html
-        sed -i 's/(SECRET_ACCESS_KEY)/$AWS_SECRET/g' ./website/site/${{ env.ENVIRONMENT }}/index.html
-        aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://${{ env.ENVIRONMENT }}.brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
+        sed -i 's/(ACCESS_KEY_ID)/$AWS_KEY/g' ./website/site/index.html
+        sed -i 's/(SECRET_ACCESS_KEY)/$AWS_SECRET/g' ./website/site/index.html
+        aws s3 sync ./website/site/ s3://${{ env.ENVIRONMENT }}.brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
