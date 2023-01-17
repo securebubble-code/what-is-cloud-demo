@@ -13,4 +13,5 @@ output "dynamodb_user_access_key" {
 
 output "dynamodb_user_secret" {
   value = aws_iam_access_key.main-website-table-user.secret
+  sensitive = true
 }

@@ -108,7 +108,7 @@ resource "aws_iam_user_policy" "main-website-table-policy" {
     {
       "Action": [
         "dynamodb:List*",
-        "dynamodb:GetItem",
+        "dynamodb:GetItem"
       ],
       "Effect": "Allow",
       "Resource": "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/main-website-table"
