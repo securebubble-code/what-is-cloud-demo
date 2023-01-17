@@ -29,4 +29,4 @@ jobs:
         role-session-name: "terraform-${{ env.ENVIRONMENT }}-apply"
 
     - name: Deploy website to S3 bucket
-      run: aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://demo.brightoncloud.co.uk --exclude ".git*" --acl public-read --sse AES256 --delete
+      run: aws s3 sync ./website/site/${{ env.ENVIRONMENT }} s3://brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete

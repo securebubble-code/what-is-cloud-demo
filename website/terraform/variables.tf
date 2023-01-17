@@ -26,7 +26,7 @@ variable "emails" {
 
 variable "website_domain" {
   description = "The domain name to associate with the website"
-  default     = "demo.brightoncloud.co.uk"
+  default     = "brightoncloud-demo.securebubble.xyz"
 }
 
 variable "tags" {
