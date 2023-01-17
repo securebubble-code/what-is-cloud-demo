@@ -23,13 +23,13 @@ provider "aws" {
 terraform {
   required_version = "~> 1.3.7"
 
-  #;backend "s3" {
-  #;  encrypt        = true
-  #;  bucket         = "brighton-cloud-demos-terraform-state-storage"
-  #;  dynamodb_table = "brighton-cloud-demos-terraform-state-lock"
-  #;  key            = "brighton-cloud-demos/base.tfstate"
-  #;  region         = "eu-west-1"
-  #;}
+  backend "s3" {
+    encrypt        = true
+    bucket         = "brighton-cloud-demos-terraform-state-storage"
+    dynamodb_table = "brighton-cloud-demos-terraform-state-lock"
+    key            = "brighton-cloud-demos/base.tfstate"
+    region         = "eu-west-1"
+  }
 }
 
 # create an S3 bucket for storing the state file (versioning, encryption, and public access block enabled)
