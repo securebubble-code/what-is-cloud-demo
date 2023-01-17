@@ -20,7 +20,7 @@ env:
 
 jobs:
   global_deployment:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: global_deployment
     runs-on: ubuntu-latest
     permissions:
