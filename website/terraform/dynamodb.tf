@@ -12,20 +12,20 @@ resource "aws_dynamodb_table" "main-website-table" {
   }
 }
 
-# resource "aws_dynamodb_table_item" "main-website-table-item-01" {
-#   table_name = aws_dynamodb_table.main-website-table.name
-#   hash_key   = aws_dynamodb_table.main-website-table.hash_key
+resource "aws_dynamodb_table_item" "main-website-table-item-01" {
+  table_name = aws_dynamodb_table.main-website-table.name
+  hash_key   = aws_dynamodb_table.main-website-table.hash_key
 
-#   item = <<ITEM
-# {
-#   "Data1": {"S": "Interesting"},
-#   "one": {"N": "11111"},
-#   "two": {"N": "22222"},
-#   "three": {"N": "33333"},
-#   "four": {"N": "44444"}
-# }
-# ITEM
-# }
+  item = <<ITEM
+{
+  "Data1": {"S": "Interesting"},
+  "one": {"N": "11111"},
+  "two": {"N": "22222"},
+  "three": {"N": "33333"},
+  "four": {"N": "44444"}
+}
+ITEM
+}
 
 # resource "aws_dynamodb_table_item" "main-website-table-item-01" {
 #   table_name = aws_dynamodb_table.main-website-table.name
