@@ -33,5 +33,5 @@ resource "aws_lambda_function" "bc-demo-invalidate-index" {
 data "archive_file" "bc-demo-invalidate-index" {
   type        = "zip"
   source_dir  = "code/${local.lambda_prefix}"
-  output_path = "code/${local.lambda_prefix}"
+  output_path = "code/${local.lambda_prefix}.zip"
 }
