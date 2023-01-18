@@ -2,10 +2,10 @@ name: 100 Central Website Deployment - Dev
 
 on:
   workflow_dispatch:
-  # push:
-  #   paths:
-  #     - 'website/terraform/**'
-  #     - '!website/terraform/readme.md'
+  push:
+    paths:
+      - 'website/terraform/**'
+      - '!website/terraform/readme.md'
   
 env:
   ENVIRONMENT: "dev"
