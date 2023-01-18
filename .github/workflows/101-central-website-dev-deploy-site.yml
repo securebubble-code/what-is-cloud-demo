@@ -2,10 +2,10 @@ name: 101 Deploy Central Website HTML - Dev
 
 on: 
   workflow_dispatch:
-   push:
-     paths:
-       - 'website/site/**'
-       - '!website/site/readme.md'
+  push:
+    paths:
+      - 'website/site/**'
+      - '!website/site/readme.md'
 
 env:
   ENVIRONMENT: "dev"
