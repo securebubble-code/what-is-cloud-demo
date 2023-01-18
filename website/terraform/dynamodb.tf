@@ -19,10 +19,10 @@ resource "aws_dynamodb_table_item" "main-website-table-item-01" {
   item = <<ITEM
 {
   "Data1": {"S": "Interesting"},
-  "two": {"N": 22222},
-  "four": {"N": 44444},
-  "three": {"N": 33333},
-  "one": {"N": 11111}
+  "one": {"N": "11111"},
+  "two": {"N": "22222"},
+  "three": {"N": "33333"},
+  "four": {"N": "44444"}
 }
 ITEM
 }
