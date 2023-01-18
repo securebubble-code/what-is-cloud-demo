@@ -4,12 +4,14 @@ on:
   workflow_dispatch:
   # push:
   #   paths:
-  #     - 'website/site/prod**'
-  #     - '!website/site/prod/readme.md'
+  #     - 'website/site/**'
+  #     - '!website/site/readme.md'
 
 env:
   ENVIRONMENT: "prod"
   REGION: "eu-west-1"
+  AWS_KEY: ${{ secrets.AWS_PROD_KEY }}
+  AWS_SECRET: ${{ secrets.AWS_PROD_SECRET }}
 
 jobs:
   update-website:
@@ -30,6 +32,7 @@ jobs:
 
     - name: Deploy website to S3 bucket
       run: |
-        sed -i 's/(ACCESS_KEY_ID)/$AWS_KEY/g' ./website/site/index.html
-        sed -i 's/(SECRET_ACCESS_KEY)/$AWS_SECRET/g' ./website/site/index.html
+        sed -i 's/(ACCESS_KEY_ID)/${{ env.AWS_KEY }}/g' ./website/site/index.html
+        sed -i 's/(SECRET_ACCESS_KEY)/${{ env.AWS_SECRET }}/g' ./website/site/index.html
+        sed -i 's/(AWS_REGION)/${{ env.REGION }}/g' ./website/site/index.html
         aws s3 sync ./website/site/ s3://brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
