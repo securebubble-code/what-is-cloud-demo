@@ -19,7 +19,7 @@ resource "aws_lambda_function" "bc-demo-invalidate-index" {
   depends_on = [
     aws_iam_role_policy_attachment.iam_for_lambda,
     aws_cloudwatch_log_group.bc-demo-invalidate-index,
-    archive_file.bc-demo-invalidate-index
+    data.archive_file.bc-demo-invalidate-index
   ]
   timeout = 900
   tags = merge(var.tags, {
