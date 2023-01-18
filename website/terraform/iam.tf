@@ -1,5 +1,5 @@
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "${var.prefix}-lambda-role"
+  name = "${local.resource_name_prefix}-lambda-role"
 
   assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_policy" "lambda_access_policy" {
-  name        = "${var.prefix}-backend-policy"
+  name        = "${local.resource_name_prefix}-backend-policy"
   path        = "/"
   description = "IAM policy for lambda"
 

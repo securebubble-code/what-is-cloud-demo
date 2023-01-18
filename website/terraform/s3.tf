@@ -45,7 +45,7 @@ resource "aws_s3_bucket_logging" "main-website-access-logging" {
   target_prefix = "root/"
 }
 
-resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+resource "aws_s3_bucket_policy" "main-website-policy" {
   bucket = aws_s3_bucket.main-website.id
   policy = <<EOF
 {

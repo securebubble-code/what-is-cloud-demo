@@ -1,4 +1,5 @@
 import boto3
+import os
 import time
 import json
 
@@ -14,10 +15,10 @@ def return_func(status_code=200, message="cf_invalidation success", headers=None
 
 
 # Create CloudFront invalidation
-def create_invalidation(DISTRIBUTION_ID):
+def create_invalidation():
     # Create CloudFront client
     cf = boto3.client('cloudfront')
-
+    DISTRIBUTION_ID = os.environ.get('dist_id')
     # Enter Original name
     res = cf.create_invalidation(
     DistributionId=DISTRIBUTION_ID,
@@ -35,11 +36,8 @@ def create_invalidation(DISTRIBUTION_ID):
 
 
 def lambda_handler(event, context):
-    print(event)
-    dist_id = event['dist_id']
-
     # Create CloudFront Invalidation
-    invd = create_invalidation(dist_id)
+    invd = create_invalidation()
     message = f"Invalidation response: {invd}"
     print(message)
     return return_func(status_code=200,message=message)

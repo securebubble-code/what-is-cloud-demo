@@ -1,6 +1,7 @@
 # Provider to pull account details
 locals {
   bucket_name = var.environment != "prod" ? "${var.environment}.${var.website_domain}" : var.website_domain
+  resource_name_prefix = "${var.prefix}-${var.environment}"
 }
 
 provider "archive" {}

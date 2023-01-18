@@ -111,7 +111,7 @@ resource "aws_iam_user_policy" "main-website-table-policy" {
         "dynamodb:GetItem"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/main-website-table"
+      "Resource": "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${var.prefix}-*"
     }
   ]
 }
