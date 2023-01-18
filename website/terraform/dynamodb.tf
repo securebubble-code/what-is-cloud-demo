@@ -23,7 +23,16 @@ resource "aws_dynamodb_table_item" "main-website-table-item-01" {
   "sport": {"S": "formula_one"},
   "animal": {"S": "dogs"},
   "cloud": {"S": "couldn't possibly say ;)"}
-},
+}
+ITEM
+}
+
+resource "aws_dynamodb_table_item" "main-website-table-item-02" {
+  table_name = aws_dynamodb_table.main-website-table.name
+  hash_key   = aws_dynamodb_table.main-website-table.hash_key
+
+  item = <<ITEM
+}
 {
   "Subject": {"S": "sherlock"},
   "colour": {"S": "pink"},
