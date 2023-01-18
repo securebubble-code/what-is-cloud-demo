@@ -1,0 +1,64 @@
+name: 151 Central Website Destruction - Dev
+
+on:
+  workflow_dispatch:
+  
+env:
+  ENVIRONMENT: "dev"
+  FOLDERNAME: "website"
+  REGION: "eu-west-1"
+  TERRAFORM_VERSION: "1.3.7"
+
+jobs:
+  dev-website-destroy:
+    name: dev-website-destroy
+    runs-on: ubuntu-latest
+    #environment: dev
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+      issues: write     # This is required for creating the issue for approval
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        aws-region: ${{ env.REGION }}
+        role-to-assume: ${{ secrets.ROLE_NAME }}
+        role-session-name: "terraform-${{ env.ENVIRONMENT }}-${{ env.FOLDERNAME }}-apply"
+
+    - name: dev-website Destruction - Install Terraform
+      run: |
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+
+    - name: dev-website Destruction - Verify Terraform version
+      run: terraform --version
+
+    - name: dev-website Destruction - Terraform format
+      run: terraform -chdir=$FOLDERNAME/terraform fmt
+
+    - name: dev-website Destruction - Terraform init
+      run: terraform -chdir=$FOLDERNAME/terraform init -input=false
+
+    - name: dev-website Destruction - Terraform workspace
+      run: terraform -chdir=$FOLDERNAME/terraform workspace select $ENVIRONMENT-$FOLDERNAME || terraform -chdir=$FOLDERNAME/terraform workspace new $ENVIRONMENT-$FOLDERNAME 
+
+    - name: dev-website Destruction - Terraform validation
+      run: terraform -chdir=$FOLDERNAME/terraform validate
+
+    - name: dev-website Destruction - Terraform plan
+      run: terraform -chdir=$FOLDERNAME/terraform plan destroy -var 'environment=${{ env.ENVIRONMENT }}' -input=false
+
+    - name: dev-website Destruction - Confirm destroy
+      uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: securebubble-code
+        minimum-approvals: 1
+
+    - name: dev-website Destruction - Terraform destroy
+      run: terraform -chdir=$FOLDERNAME/terraform destroy -var 'environment=${{ env.ENVIRONMENT }}' -auto-approve -input=false
