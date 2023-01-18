@@ -32,7 +32,7 @@ jobs:
 
     - name: Deploy website to S3 bucket
       run: |
-        sed -i 's/(ACCESS_KEY_ID)/$AWS_KEY/g' ./website/site/index.html
-        sed -i 's/(SECRET_ACCESS_KEY)/$AWS_SECRET/g' ./website/site/index.html
-        sed -i 's/(AWS_REGION)/$REGION/g' ./website/site/index.html
+        sed -i 's/(ACCESS_KEY_ID)/${{ env.AWS_KEY }}/g' ./website/site/index.html
+        sed -i 's/(SECRET_ACCESS_KEY)/${{ env.AWS_SECRET }}/g' ./website/site/index.html
+        sed -i 's/(AWS_REGION)/${{ env.REGION }}/g' ./website/site/index.html
         aws s3 sync ./website/site/ s3://${{ env.ENVIRONMENT }}.brightoncloud-demo.securebubble.xyz --exclude ".git*" --acl public-read --sse AES256 --delete
