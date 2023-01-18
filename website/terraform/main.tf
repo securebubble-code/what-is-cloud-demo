@@ -3,6 +3,8 @@ locals {
   bucket_name = var.environment != "prod" ? "${var.environment}.${var.website_domain}" : var.website_domain
 }
 
+provider "archive" {}
+
 provider "aws" {
   region = var.aws_region
   alias  = "identity"

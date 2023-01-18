@@ -11,3 +11,7 @@ output "route53_domain" {
 output "cdn_domain" {
   value = aws_cloudfront_distribution.main_distribution.domain_name
 }
+
+output "cdn_id" {
+  value = aws_cloudfront_distribution.main_distribution.id
+}
