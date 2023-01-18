@@ -41,7 +41,7 @@ resource "aws_iam_policy" "lambda_access_policy" {
             "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": "cloudfront:CreateInvalidation",
-            "Resource": "${aws_cloudfront_distribution.main_distribution.id}"
+            "Resource": "${aws_cloudfront_distribution.main_distribution.arn}"
         }
     ]
 }
