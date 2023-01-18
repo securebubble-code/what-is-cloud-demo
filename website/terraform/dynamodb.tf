@@ -1,10 +1,10 @@
 # create a dynamodb table for dynamic web data
 resource "aws_dynamodb_table" "main-website-table" {
   name         = "main-website-table"
-  hash_key     = "Data1"
+  hash_key     = "Subject"
   billing_mode = "PAY_PER_REQUEST"
   attribute {
-    name = "Data1"
+    name = "Subject"
     type = "S"
   }
   lifecycle {
