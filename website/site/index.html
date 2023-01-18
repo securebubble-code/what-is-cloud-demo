@@ -39,9 +39,9 @@
             var docClient = new AWS.DynamoDB.DocumentClient();
 
             var params = {
-                TableName: "main-website-table",
+                TableName: "brighton-cloud-demos-(ENVIRONMENT)-main-website-table",
                 Key:{
-                    "Data1": "Interesting",// Partition Key
+                    "Subject": "antony",// Partition Key
                 }
             };
             docClient.get(params, function(err, data) {
