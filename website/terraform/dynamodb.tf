@@ -32,7 +32,6 @@ resource "aws_dynamodb_table_item" "main-website-table-item-02" {
   hash_key   = aws_dynamodb_table.main-website-table.hash_key
 
   item = <<ITEM
-}
 {
   "Subject": {"S": "sherlock"},
   "colour": {"S": "pink"},
