@@ -23,7 +23,7 @@ resource "aws_dynamodb_table_item" "main-website-table-item-01" {
   "sport": {"S": "formula_one"},
   "animal": {"S": "dogs"},
   "cloud": {"S": "couldn't possibly say ;)"}
-}
+},
 {
   "Subject": {"S": "sherlock"},
   "colour": {"S": "pink"},
