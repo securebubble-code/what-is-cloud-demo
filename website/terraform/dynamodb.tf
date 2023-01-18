@@ -12,20 +12,20 @@ resource "aws_dynamodb_table" "main-website-table" {
   }
 }
 
-resource "aws_dynamodb_table_item" "main-website-table-item-01" {
-  table_name = aws_dynamodb_table.main-website-table.name
-  hash_key   = aws_dynamodb_table.main-website-table.hash_key
+# resource "aws_dynamodb_table_item" "main-website-table-item-01" {
+#   table_name = aws_dynamodb_table.main-website-table.name
+#   hash_key   = aws_dynamodb_table.main-website-table.hash_key
 
-  item = <<ITEM
-{
-  "Subject": {"S": "antony"},
-  "colour": {"S": "blue"},
-  "sport": {"S": "formula_one"},
-  "animal": {"S": "dogs"},
-  "cloud": {"S": "couldn't possibly say ;)"}
-}
-ITEM
-}
+#   item = <<ITEM
+# {
+#   "Subject": {"S": "antony"},
+#   "colour": {"S": "blue"},
+#   "sport": {"S": "formula_one"},
+#   "animal": {"S": "dogs"},
+#   "cloud": {"S": "couldn't possibly say ;)"}
+# }
+# ITEM
+# }
 
 resource "aws_dynamodb_table_item" "main-website-table-item-02" {
   table_name = aws_dynamodb_table.main-website-table.name
